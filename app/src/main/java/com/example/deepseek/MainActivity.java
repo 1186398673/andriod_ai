@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
     private Drawer drawer;
 
+    private String selectedModel; // 用于存储选中的模型
+
     private static final String PREFS_NAME = "ApiKeyPrefs";
     private static final String API_KEY = "ApiKey";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("首页").withIdentifier(1),
                         new PrimaryDrawerItem().withName("设置API").withIdentifier(2),
-                        new PrimaryDrawerItem().withName("关于").withIdentifier(3)
+                        new PrimaryDrawerItem().withName("选择模型").withIdentifier(3)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                                 showSetApiKeyDialog();
                                 break;
                             case 3:
-                                // 打开关于
+                                showModelSelectionDialog();
                                 break;
                         }
                         return false;
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         sendButton.setOnClickListener(v -> {
             String userInput = inputText.getText().toString().trim();
             String savedApiKey = getApiKey(this);
+            String savedmodel =viewModel.getmodel(this);
             if (savedApiKey != null) {
                 // 使用已保存的 API Key
                 //Toast.makeText(this, "已加载 API Key: " + savedApiKey, Toast.LENGTH_SHORT).show();
@@ -117,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 String authToken = "Bearer " + savedApiKey;
                 Message systemMessage = new Message("system", "You are a helpful assistant.");
                 Message[] messages = {systemMessage, userMessage};
-                ChatRequest chatRequest = new ChatRequest("deepseek-chat", messages, false);
-                viewModel.sendChatRequest(authToken, chatRequest);
+                ChatRequest chatRequest = new ChatRequest(savedmodel, messages, false);
+                viewModel.sendChatRequest(authToken, chatRequest,this);
                 messageList.add(new Message("system", "思考中..."));
                 adapter.notifyItemInserted(messageList.size() - 1);
                 recyclerView.scrollToPosition(messageList.size() - 1);
@@ -209,4 +215,53 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getString(API_KEY, null);
     }
+
+    private void showModelSelectionDialog() {
+        // 定义可选的模型列表
+        final String[] models = {"abab6.5s-chat", "MiniMax-Text-01", "deepseek-chat","deepseek-reasoner"};
+
+        // 创建 AlertDialog 构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择模型");
+
+        // 设置单选列表项
+        builder.setSingleChoiceItems(models, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 用户选择的模型
+                selectedModel = models[which];
+
+            }
+        });
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (selectedModel != null) {
+                    // 处理选中的模型，例如显示或应用
+                    Toast.makeText(MainActivity.this, "您选择的模型是: " + selectedModel, Toast.LENGTH_SHORT).show();
+                    // 在这里可以执行与模型相关的操作
+                    viewModel.savemodel(MainActivity.this,selectedModel);
+
+                } else {
+                    Toast.makeText(MainActivity.this, "未选择任何模型", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // 显示对话框
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
