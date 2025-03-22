@@ -13,8 +13,9 @@ public class RetrofitClient {
     private static Retrofit retrofit = null;
     private static OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(200, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(200, java.util.concurrent.TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
             .build();
 
     public static Retrofit getClient() {

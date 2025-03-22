@@ -52,4 +52,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'com.github.mikepenz:materialdrawer:6.1.2'
+
 }
