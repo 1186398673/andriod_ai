@@ -12,6 +12,10 @@ public class RetrofitClient {
     private static final String BASE_URL = "https://api.minimax.chat/v1/";
 
     private static final String BASE_URL2 = "https://api.deepseek.com/";
+
+
+
+    //private static final String BASE_URL2 =" https://spark-api-open.xf-yun.com/v1/";
     private static Retrofit retrofit = null;
     private static OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)

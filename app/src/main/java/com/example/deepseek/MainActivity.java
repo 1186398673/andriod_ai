@@ -1,8 +1,6 @@
 package com.example.deepseek;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -13,15 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -218,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showModelSelectionDialog() {
         // 定义可选的模型列表
-        final String[] models = {"abab6.5s-chat", "MiniMax-Text-01", "deepseek-chat","deepseek-reasoner"};
+        final String[] models = {"abab6.5s-chat", "MiniMax-Text-01", "deepseek-chat","deepseek-reasoner","Spark4.0Ultra"};
 
         // 创建 AlertDialog 构建器
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
